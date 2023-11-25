@@ -64,7 +64,7 @@ else
 fi
 
 $DOAS apk update
-$DOAS apk add --no-cache python3 py3-pip py3-venv git
+$DOAS apk add --no-cache python3 py3-pip git
 
 if $PURGE_ANSIBLE || $PURGE_ALL; then
 	python3 -m venv /tmp/ansible-venv
@@ -115,5 +115,5 @@ fi
 if $PURGE_PYTHON || $PURGE_ALL; then
 	echo Purging python
 	$DOAS pip uninstall pipx
-	$DOAS apk del python3 py3-pip py3-venv
+	$DOAS apk del python3 py3-pip
 fi
