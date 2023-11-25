@@ -11,10 +11,10 @@ An basic alpine install.
 Host Variables
 --------------
 
-- extra_packages (list): A list of extra packages to install with apk.
-- no_passwords (bool): Disable passwords for root and interactive users for login and ssh.
-- required_groups (list): A list of groups to add to the system.
-- sshd_allowed_ssh_users_group: The group to allow ssh access to.
+- `extra_packages` (list): A list of extra packages to install with apk.
+- `no_passwords` (bool): Disable passwords for root and interactive users for login and ssh.
+- `required_groups` (list): A list of groups to add to the system.
+- `sshd_allowed_ssh_users_group` (str): The group to allow ssh access to.
 - `user.extra_doas` (list): A list of dictionaries of doas entry parts.
   - `action` (str): ``permit`` or ``deny``. This option is always required.
   - `nopass` (bool): Set the ``nopass`` option. Defaults to `false`.
@@ -28,16 +28,16 @@ Host Variables
   - `comment` (str): An arbitrary comment. Defaults to unset.
   - `id` (str): A unique identifier to allow rewriting and removing entries. Defaults to unset.
   - `state` (str): If ``present`` then the entry is added. If ``absent`` the entry with the given `id` is removed. Defaults to ``present``.
-- user.groups (list): A list of groups to add the user to.
-- user.home_dir (str): The user's home directory. 
-- user.name (str): The user's name.
-- user.password (str): The user's password hash. This should be encrypted with ansible vault. Defaults to `*` (disabled password).
-- user.pubkeys (list): A list of ssh pubkeys to add the user's authorize_keys file.
-- user.pubkeys_from_github_user (str): A github username to pull pubkeys from.
-- user.pubkeys_from_gitlab_user (str): A gitlab.com username to pull pubkeys from.
-- user.pubkeys_from_url (list): A list of URLs to pull ssh pubkeys from.
-- user.ssh_user (bool): If true add this user to the `sshd_allowed_ssh_users_group` group.
-- user.doas_no_password (bool): If true addsan entry in the ``doas.conf`` file allowing all commands with no password.
+- `user.groups` (list): A list of groups to add the user to.
+- `user.home_dir` (str): The user's home directory. 
+- `user.name` (str): The user's name.
+- `user.password` (str): The user's password hash. This should be encrypted with ansible vault. Defaults to `*` (disabled password).
+- `user.pubkeys` (list): A list of ssh pubkeys to add the user's authorize_keys file.
+- `user.pubkeys_from_github_user` (str): A github username to pull pubkeys from.
+- `user.pubkeys_from_gitlab_user` (str): A gitlab.com username to pull pubkeys from.
+- `user.pubkeys_from_url` (list): A list of URLs to pull ssh pubkeys from.
+- `user.ssh_user` (bool): If true add this user to the `sshd_allowed_ssh_users_group` group.
+- `user.doas_no_password` (bool): If true addsan entry in the ``doas.conf`` file allowing all commands with no password.
 
 Dependencies
 ------------
