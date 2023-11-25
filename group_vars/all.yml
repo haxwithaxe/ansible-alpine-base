@@ -52,3 +52,24 @@ ssh_macs:
   - hmac-sha2-512
   - hmac-sha2-256
   - umac-128@openssh.com 
+
+os_vars:
+  sshd_path: /usr/sbin/sshd
+  ssh_host_keys_dir: /etc/ssh
+  sshd_service_name: sshd
+  ssh_owner: root
+  ssh_group: root
+  ssh_host_keys_owner: root
+  ssh_host_keys_group: root
+  ssh_host_keys_mode: '0600'
+  ssh_selinux_packages: []
+
+  # true if SSH support Kerberos
+  ssh_kerberos_support: true
+
+  # true if SSH has PAM support
+  ssh_pam_support: true
+
+  sshd_moduli_file: /etc/ssh/moduli
+
+  sshd_disable_crypto_policy: false
