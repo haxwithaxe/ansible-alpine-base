@@ -50,7 +50,7 @@
   loop: "{{ users }}"
 
 - name: Configure IP in terminal motd
-  shell:
+  copy:
     src: /etc/issue
     dest: /etc/issue.base
     remote_src: yes
