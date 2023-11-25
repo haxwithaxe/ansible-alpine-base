@@ -19,13 +19,28 @@
     state: present
   when: user.name != 'root'
 
-## SSH authorized keys
+
+# Doas
+- name: Add doas nopass permissions
+  lineinfile:
+    path: /etc/doas.d/doas.conf
+    line: 'permit nopass {{ user.name }}  #nopass-{{ user.name }}'
+  when: user.doas_no_password | default(false)
+
+- name: Add specific doas permissions
+  include_tasks: tasks/doas.yml
+  loop: "{{ user.extra_doas | default([]) }}"
+  loop_control:
+    loop_var: doas
+
+
+# SSH authorized keys
 
 - name: Add authorized_keys from remote sources
   include_tasks: remote_authorized_keys.yml
   when: user.ssh_user | default(false)
 
-### Run this after the remote key import which would overwrite this set of changes
+## Run this after the remote key import which would overwrite this set of changes
 - name: Add authorized_keys from config
   include_tasks: config_authorized_keys.yml
   when: user.pubkeys | default([]) | bool

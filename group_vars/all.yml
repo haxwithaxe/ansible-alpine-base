@@ -6,12 +6,14 @@ issue_interfaces:
 users:
   - name: "hax"
     home_dir: "/home/hax"
+    groups:
+      - wheel
     pubkeys_from_github_user: haxwithaxe
-    pubkey_urls:
+    pubkeys_from_url:
       - https://cheery.hax.in.net/pubkeys
     ssh_user: yes
     no_password: yes
-    sudo_no_password: yes
+    doas_no_password: yes
   - name: "root"
     home_dir: "/root"
 

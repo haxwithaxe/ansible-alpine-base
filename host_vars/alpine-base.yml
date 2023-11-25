@@ -1,0 +1,21 @@
+---
+
+users:
+  - name: bob
+    home_dir: /home/bob
+    extra_doas:
+      - action: permit
+        nopass: true
+        nolog: true
+        persist: true
+        keepenv: true
+        setenv:
+          FOO: foo
+        as:
+          hax
+        cmd: echo
+        args:
+          - '-n'
+        comment: 'this is a comment'
+        id: some-uuid4
+        

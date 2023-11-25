@@ -4,9 +4,10 @@
 - name: Validate user config
   fail:
     msg: "no_passwords is true and {{ item.name }} does not have pubkey, is not in the ssh allowed group, and does not have sudo"
-  when: item.name != 'root' and no_passwords and item.ssh_user and not (item.pubkeys is defined or item.pubkeys_from_github_user is defined or item.pubkeys_from_gitlab_user is defined or item.pubkeys_from_url is defined)
+  when: item.name != 'root' and no_passwords and (item.ssh_user | default(false)) and not (item.pubkeys is defined or item.pubkeys_from_github_user is defined or item.pubkeys_from_gitlab_user is defined or item.pubkeys_from_url is defined)
   loop: "{{ users }}"
   changed_when: no
+
 
 # Extras
 - name: Install extra packages

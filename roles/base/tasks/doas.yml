@@ -1,0 +1,87 @@
+---
+
+- name: Set default doas values
+  set_fact:
+    _nopass: ''
+    _nolog: ''
+    _persist: ''
+    _keepenv: ''
+    _setenv: []
+    _setenv_str: ''
+    _as: ''
+    _cmd: ''
+    _args: []
+    _comment: ''
+
+- name: Set nopass
+  set_fact:
+    _nopass: ' nopass'
+  when: doas.nopass | default(false)
+
+- name: Set nolog
+  set_fact:
+    _nolog: ' nolog'
+  when: doas.nolog | default(false)
+
+- name: Set persist
+  set_fact:
+    _persist: ' persist'
+  when: doas.persist | default(false)
+
+- name: Set keepenv
+  set_fact:
+    _keepenv: ' keepenv'
+  when: doas.keepenv | default(false)
+
+- name: Set as
+  set_fact:
+    _as: ' as {{ doas.as }}'
+  when: doas.as is defined
+
+- name: Set cmd
+  set_fact:
+    _cmd: ' {{ doas.cmd }}'
+  when: doas.cmd is defined
+
+- name: Set args
+  set_fact:
+    _args: ' {{ doas.args | join(" ") }}'
+  when: doas.cmd is defined and doas.args | default([]) | length > 0
+
+- name: Assemble setenv - set
+  set_fact:
+    _setenv: "{{ _setenv + [[item.key,item.value] | join('=')] }}"
+  loop: "{{ doas.setenv | default({}) | dict2items }}"
+
+- name: Assemble setenv - unset
+  set_fact:
+    _setenv: "{{ _setenv + ['-' + item] }}"
+  loop: "{{ doas.unsetenv | default([]) }}"
+
+- name: Set setenv
+  set_fact:
+    _setenv_str: " setenv { {{ _setenv | join(' ') }} }"
+  when: _setenv | length > 0
+
+- name: Set comment
+  set_fact:
+    _comment: '  #{{ doas.id | default('') }}{{ doas.comment | default('') }}'
+  when: doas.id is defined or doas.comment is defined
+
+- name: Set line
+  set_fact:
+    _line: '{{ doas.action }}{{ _nopass }}{{ _nolog }}{{ _persist }}{{ _keepenv }}{{ _setenv_str }} {{ user.name }}{{ _as }}{{ _cmd }}{{ _args }}{{ _comment }}'
+
+- name: Ensure doas permissions exist
+  lineinfile:
+    path: /etc/doas.d/doas.conf
+    line: '{{ _line }}'
+  when: doas.id is not defined
+
+- name: Ensure doas permissions exist
+  lineinfile:
+    path: /etc/doas.d/doas.conf
+    regex: '#{{ doas.id }}'
+    line: '{{ _line }}'
+    state: "{{ doas.state | default('present') }}"
+  when: doas.id is defined
