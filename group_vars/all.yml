@@ -1,5 +1,8 @@
 ---
 
+issue_interfaces:
+  - eth0
+
 users:
   - name: "hax"
     home_dir: "/home/hax"
