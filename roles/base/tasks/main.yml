@@ -18,7 +18,7 @@
 
 # Tools
 - name: Install basic tools
-  community.community.apk:
+  community.general.apk:
     name:
       - openssh-server
       - openssh-client
