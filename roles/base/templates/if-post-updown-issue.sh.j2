@@ -1,0 +1,12 @@
+#!/bin/ash
+
+cat /etc/issue.base > /etc/issue
+{% for iface in issue_interfaces %}
+if ip addr show dev {{ iface }} | grep -q 'state UP'; then
+	echo {{ iface }} UP >> /etc/issue
+	ip addr show dev {{ iface }} | grep 'scope global' | sed 's/ scope.*//' >> /etc/issue
+else
+	echo {{ iface }} DOWN >> /etc/issue
+fi
+{% endfor %}
+echo >> /etc/issue

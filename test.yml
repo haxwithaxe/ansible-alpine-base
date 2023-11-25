@@ -1,0 +1,21 @@
+---
+
+- name: Prep system
+  hosts: all
+  become: yes
+  become_user: root
+  tasks:
+    - name: Apk update and upgrade
+      community.general.apk:
+        update_cache: yes
+        upgrade: yes
+
+- name: Base role
+  hosts: all
+  become: yes
+  become_user: root
+  collections:
+    - devsec.hardening
+  roles:
+    - base
+    - ssh_hardening

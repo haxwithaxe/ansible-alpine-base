@@ -1,0 +1,21 @@
+---
+
+- name: Set group variables
+  set_fact:
+    _gid: "{{ item.gid | default(-1) }}"
+    _system: "{{ item.system | default(false) }}"
+
+- name: Add group with GID
+  group:
+    name: "{{ item.name }}"
+    gid: "{{ _gid }}"
+    system: "{{ _system }}"
+    state: present
+  when: _gid | int >= 0
+
+- name: Add group without GID
+  group:
+    name: "{{ item.name }}"
+    system: "{{ _system }}"
+    state: present
+  when: _gid | int < 0

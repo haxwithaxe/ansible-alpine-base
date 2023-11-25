@@ -1,0 +1,51 @@
+---
+
+users:
+  - name: "hax"
+    home_dir: "/home/hax"
+    pubkeys_from_github_user: haxwithaxe
+    pubkey_urls:
+      - https://cheery.hax.in.net/pubkeys
+    ssh_user: yes
+    no_password: yes
+    sudo_no_password: yes
+  - name: "root"
+    home_dir: "/root"
+
+required_groups:
+  - name: ssh-users
+
+no_passwords: yes
+sshd_allowed_ssh_users_group: ssh-users
+sshd_moduli_size: 2048
+sshd_rsa_host_key_size: 8192
+ssh_host_key_files:
+  - /etc/ssh/ssh_host_rsa_key
+  - /etc/ssh/ssh_host_ed25519_key
+ssh_host_key_algorithms:
+  - ssh-ed25519
+  - ssh-rsa
+ssh_client_host_key_algorithms:
+  - ssh-ed25519
+  - ssh-rsa
+ssh_allow_groups: "{{ sshd_allowed_ssh_users_group }}"
+ssh_print_motd: yes
+ssh_print_pam_motd: yes
+sshd_moduli_minimum: "{{ sshd_moduli_size }}"
+ssh_ciphers:
+  - chacha20-poly1305@openssh.com
+  - aes256-gcm@openssh.com
+  - aes128-gcm@openssh.com
+  - aes256-ctr
+  - aes192-ctr
+  - aes128-ctr
+ssh_kex:
+  - curve25519-sha256@libssh.org
+  - diffie-hellman-group-exchange-sha256
+ssh_macs:
+  - hmac-sha2-512-etm@openssh.com
+  - hmac-sha2-256-etm@openssh.com
+  - umac-128-etm@openssh.com
+  - hmac-sha2-512
+  - hmac-sha2-256
+  - umac-128@openssh.com 

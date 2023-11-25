@@ -1,0 +1,76 @@
+---
+
+# If no_passwords and user does not have pubkey, is not in the ssh allowed group, and does not have sudo fail now
+- name: Validate user config
+  fail:
+    msg: "no_passwords is true and {{ item.name }} does not have pubkey, is not in the ssh allowed group, and does not have sudo"
+  when: item.name != 'root' and no_passwords and item.ssh_user and not (item.pubkeys is defined or item.pubkeys_from_github_user is defined or item.pubkeys_from_gitlab_user is defined or item.pubkeys_from_url is defined)
+  loop: "{{ users }}"
+  changed_when: no
+
+# Extras
+- name: Install extra packages
+  community.general.apk:
+    name: "{{ extra_packages }}"
+    state: latest
+  when: ( extra_packages | default([]) | length ) > 0
+
+
+# Tools
+- name: Install basic tools
+  apt:
+    name:
+      - openssh-server
+      - openssh-client
+    state: latest
+
+
+# Users and Groups
+- name: Add groups
+  include_tasks: group.yml
+  loop: "{{ required_groups | default([]) }}"
+
+- name: Ensure SSH users group exists
+  group:
+    name: "{{ sshd_allowed_ssh_users_group }}"
+    state: present
+
+- name: Add users
+  include_tasks: user.yml
+  loop: "{{ users }}"
+  loop_control:
+    loop_var: user
+
+- name: Configure root user
+  user:
+    name: "root"
+    password: "{{ item.password | default('*') }}"
+    state: present
+  when: item.name == 'root'
+  loop: "{{ users }}"
+
+- name: Configure IP in terminal motd
+  shell:
+    src: /etc/issue
+    dest: /etc/issue.base
+    remote_src: yes
+    mode: '0644'
+    owner: root
+    group: root
+
+- name: Install ifup post script
+  template:
+    src: templates/if-post-updown-issue.sh.j2
+    dest: /etc/network/if-post-up.d/issue
+    mode: '0755'
+    owner: root
+    group: root
+
+- name: Install ifdown post script
+  template:
+    src: templates/if-post-updown-issue.sh.j2
+    dest: /etc/network/if-post-down.d/issue
+    mode: '0755'
+    owner: root
+    group: root
+
